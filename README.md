@@ -16,3 +16,7 @@
 - [create an HTTP server with http.ServeMux](https://github.com/Prakash-Ravichandran/go-social-feed-api/commit/768f0417b2b2a991acfef872e1eedee57a3afb09)
 
 - [mux -> chi](https://github.com/Prakash-Ravichandran/go-social-feed-api/commit/8dd9b26295bea17b627f4cce0d3954fca539c382)
+
+### Hot reloading with air
+
+[hot reloading with air](https://github.com/Prakash-Ravichandran/go-social-feed-api/commit/fa79ea8f2f8ac4105a5b18c3275da970cbecb838)
