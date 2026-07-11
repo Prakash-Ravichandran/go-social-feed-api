@@ -14,3 +14,5 @@
 ### Create an HTTP server
 
 - [create an HTTP server with http.ServeMux](https://github.com/Prakash-Ravichandran/go-social-feed-api/commit/768f0417b2b2a991acfef872e1eedee57a3afb09)
+
+- [mux -> chi](https://github.com/Prakash-Ravichandran/go-social-feed-api/commit/8dd9b26295bea17b627f4cce0d3954fca539c382)
