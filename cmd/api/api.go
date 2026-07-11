@@ -21,6 +21,8 @@ type config struct {
 func (app *application) mount() http.Handler {
 	r := chi.NewRouter()
 	// middlewares
+	r.Use(middleware.RequestID)
+	r.Use(middleware.ClientIPFromRemoteAddr) // pick one ClientIPFrom* based on your infra, see below
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer) // recovers us from panic
 
