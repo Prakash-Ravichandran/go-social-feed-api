@@ -1,11 +1,15 @@
 package main
 
-import "log"
+import (
+	"log"
+
+	"github.com/Prakash-Ravichandran/go-social-feed-api/internal/env"
+)
 
 func main() {
 
 	cfg := config{
-		Addr: ":8080",
+		Addr: env.GetString("ADDR", ":8080"),
 	}
 	app := &application{
 		config: cfg,
