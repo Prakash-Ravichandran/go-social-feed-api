@@ -20,3 +20,10 @@
 ### Hot reloading with air
 
 [hot reloading with air](https://github.com/Prakash-Ravichandran/go-social-feed-api/commit/fa79ea8f2f8ac4105a5b18c3275da970cbecb838)
+
+- Start the server using
+
+```bash
+    air -v
+    air
+```
