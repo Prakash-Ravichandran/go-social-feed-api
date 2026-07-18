@@ -18,6 +18,7 @@ type application struct {
 
 type config struct {
 	Addr string
+	db   dbconfig
 }
 
 func (app *application) mount() http.Handler {
