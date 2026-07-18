@@ -27,3 +27,7 @@
     air -v
     air
 ```
+
+### Establish a DB Connection Pool
+
+[Establish a DB Connection Pool](https://github.com/Prakash-Ravichandran/go-social-feed-api/commit/d81a30a8b76a88c6d23633284dbdf366af30d6da)
