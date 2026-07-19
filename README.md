@@ -43,3 +43,19 @@
 ### Establish a DB Connection Pool
 
 [Establish a DB Connection Pool](https://github.com/Prakash-Ravichandran/go-social-feed-api/commit/d81a30a8b76a88c6d23633284dbdf366af30d6da)
+
+### SQL Migrations
+
+cmd:
+
+```bash
+migrate create -seq -ext sql -dir ./cmd/migrate/migration create_users
+```
+
+create a table using migrate
+
+```bash
+migrate -path=./cmd/migrate/migrations -database="postgres://admin:adminpassword@localhost/socialfeed?sslmode=disable" up
+```
+
+Result: A table skeleton will be created.
