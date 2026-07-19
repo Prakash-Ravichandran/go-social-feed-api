@@ -28,6 +28,18 @@
     air
 ```
 
+### Setup direnv
+
+[direnv: windows using gitbash](https://gist.github.com/Prakash-Ravichandran/1cd0ea17671702c6a4b71eb0b4fdfe06)
+
+### Repository Pattern
+
+[Repository Pattern: Implement a Skeleton](https://github.com/Prakash-Ravichandran/go-social-feed-api/commit/7f2b7123484a9bcb3211bf51d5ef299abd663d61)
+
+[Repository Pattern: Post Model](https://github.com/Prakash-Ravichandran/go-social-feed-api/commit/6b731760b10c25c476e7b4c0833fdce2757c37ec)
+
+[Repository Pattern: User Model](https://github.com/Prakash-Ravichandran/go-social-feed-api/commit/72fc9283bafa4f232079363822b3ee488ad18312)
+
 ### Establish a DB Connection Pool
 
 [Establish a DB Connection Pool](https://github.com/Prakash-Ravichandran/go-social-feed-api/commit/d81a30a8b76a88c6d23633284dbdf366af30d6da)
