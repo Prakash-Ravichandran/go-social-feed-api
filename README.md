@@ -1,87 +1,86 @@
 # go-social-feed-api
 
-### Folder Structure
+A Go-based social feed API backend.
 
-- /bin - going to keep our code into compiled binaries.
-- /cmd - the main executables or the entry points of the application.
-- /api - anything related to HTTP, Transport layer, Middlewares, servers.
-- /migrate - related to sql migrations.
-- /internal - Interacting with databases, data validations.
-- /docs - swagger doc for the application.
-- /scripts - Scripts for setting up the servers.
-- /web - Frontend of the application will go here/ any static apps will go here.
+## Folder Structure
 
-### Create an HTTP server
+- **`/bin`** – Compiled binaries.
+- **`/cmd`** – Application entry points and main executables.
+- **`/api`** – HTTP handling, transport layer, middlewares, and servers.
+- **`/migrate`** – SQL migration configurations and scripts.
+- **`/internal`** – Database interaction and data validations.
+- **`/docs`** – Swagger documentation.
+- **`/scripts`** – Deployment and server setup scripts.
+- **`/web`** – Frontend assets or static applications.
 
-- [create an HTTP server with http.ServeMux](https://github.com/Prakash-Ravichandran/go-social-feed-api/commit/768f0417b2b2a991acfef872e1eedee57a3afb09)
+## Development Log & Commits
 
-- [mux -> chi](https://github.com/Prakash-Ravichandran/go-social-feed-api/commit/8dd9b26295bea17b627f4cce0d3954fca539c382)
+### 1. HTTP Server Setup
 
-### Hot reloading with air
+- [Create an HTTP server with http.ServeMux](https://github.com/Prakash-Ravichandran/go-social-feed-api/commit/768f0417b2b2a991acfef872e1eedee57a3afb09)
+- [Migrate from standard mux to chi router](https://github.com/Prakash-Ravichandran/go-social-feed-api/commit/8dd9b26295bea17b627f4cce0d3954fca539c382)
 
-[hot reloading with air](https://github.com/Prakash-Ravichandran/go-social-feed-api/commit/fa79ea8f2f8ac4105a5b18c3275da970cbecb838)
+### 2. Hot Reloading with Air
 
-- Start the server using
+- [Configure hot reloading with Air](https://github.com/Prakash-Ravichandran/go-social-feed-api/commit/fa79ea8f2f8ac4105a5b18c3275da970cbecb838)
+
+Start the server locally using:
 
 ```bash
-    air -v
-    air
+air -v
+air
 ```
 
-### Setup direnv
+### 3. Environment Configuration
 
-[direnv: windows using gitbash](https://gist.github.com/Prakash-Ravichandran/1cd0ea17671702c6a4b71eb0b4fdfe06)
+- [Setup direnv on Windows using Git Bash](https://gist.github.com/Prakash-Ravichandran/1cd0ea17671702c6a4b71eb0b4fdfe06)
 
-### Repository Pattern
+### 4. Repository Pattern & Database
 
-[Repository Pattern: Implement a Skeleton](https://github.com/Prakash-Ravichandran/go-social-feed-api/commit/7f2b7123484a9bcb3211bf51d5ef299abd663d61)
+- [Establish a DB Connection Pool](https://github.com/Prakash-Ravichandran/go-social-feed-api/commit/d81a30a8b76a88c6d23633284dbdf366af30d6da)
+- [Implement the Repository Pattern Skeleton](https://github.com/Prakash-Ravichandran/go-social-feed-api/commit/7f2b7123484a9bcb3211bf51d5ef299abd663d61)
+- [Add Post Model to Repository](https://github.com/Prakash-Ravichandran/go-social-feed-api/commit/6b731760b10c25c476e7b4c0833fdce2757c37ec)
+- [Add User Model to Repository](https://github.com/Prakash-Ravichandran/go-social-feed-api/commit/72fc9283bafa4f232079363822b3ee488ad18312)
 
-[Repository Pattern: Post Model](https://github.com/Prakash-Ravichandran/go-social-feed-api/commit/6b731760b10c25c476e7b4c0833fdce2757c37ec)
+---
 
-[Repository Pattern: User Model](https://github.com/Prakash-Ravichandran/go-social-feed-api/commit/72fc9283bafa4f232079363822b3ee488ad18312)
+## SQL Migrations
 
-### Establish a DB Connection Pool
+### Raw CLI Usage
 
-[Establish a DB Connection Pool](https://github.com/Prakash-Ravichandran/go-social-feed-api/commit/d81a30a8b76a88c6d23633284dbdf366af30d6da)
-
-### SQL Migrations
-
-cmd:
+**Create a migration:**
 
 ```bash
 migrate create -seq -ext sql -dir ./cmd/migrate/migration create_users
+
 ```
 
-create a table using migrate
+**Run up migrations:**
 
 ```bash
 migrate -path=./cmd/migrate/migrations -database="postgres://admin:adminpassword@localhost/socialfeed?sslmode=disable" up
+
 ```
 
-Result: A table skeleton will be created.
+### Makefile Shortcuts
 
-- Run migration with help of Makefile.
-
-Step 1: Execute for creating sql file: Ex.alter_post_table argument is assigned to MAKECMDGOALS
+**Step 1: Create a new SQL migration file**
 
 ```bash
 make migration alter_post_table
+
 ```
 
-```makefile
-.PHONY: migrate-create
-migration:
-	@migrate create -seq -ext sql -dir $(MIGRATIONS_PATH) $(filter-out $@,$(MAKECMDGOALS))
-```
-
-Step 2: up the migration to execute the query in .sql
+**Step 2: Apply pending migrations (Up)**
 
 ```bash
 make migrate-up
+
 ```
 
-Step 3: down the migration to execute the query in .sql
+**Step 3: Roll back migrations (Down)**
 
 ```bash
 make migrate-down
+
 ```
