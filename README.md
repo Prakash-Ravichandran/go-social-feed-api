@@ -59,3 +59,29 @@ migrate -path=./cmd/migrate/migrations -database="postgres://admin:adminpassword
 ```
 
 Result: A table skeleton will be created.
+
+- Run migration with help of Makefile.
+
+Step 1: Execute for creating sql file: Ex.alter_post_table argument is assigned to MAKECMDGOALS
+
+```bash
+make migration alter_post_table
+```
+
+```makefile
+.PHONY: migrate-create
+migration:
+	@migrate create -seq -ext sql -dir $(MIGRATIONS_PATH) $(filter-out $@,$(MAKECMDGOALS))
+```
+
+Step 2: up the migration to execute the query in .sql
+
+```bash
+make migrate-up
+```
+
+Step 3: down the migration to execute the query in .sql
+
+```bash
+make migrate-down
+```
