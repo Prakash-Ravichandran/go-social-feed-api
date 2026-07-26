@@ -84,3 +84,9 @@ make migrate-up
 make migrate-down
 
 ```
+
+### 5. Posts CRUD
+
+**JSON Marshalling Responses**
+
+[JSON Marshalling Responses](https://github.com/Prakash-Ravichandran/go-social-feed-api/commit/1e3c41c605a6b4a7e4a36ebc20caacb8faec37ae)
