@@ -16,9 +16,12 @@ type dbconfig struct {
 	maxIdleTime  string
 }
 
+const version = "1.0"
+
 func main() {
 	cfg := config{
 		Addr: env.GetString("ADDR", ":8080"),
+		env:  env.GetString("ENV", "development"),
 		db: dbconfig{
 			addr:         env.GetString("DB_ADDR", "postgres://admin:adminpassword@localhost/socialfeed?sslmode=disable"),
 			maxOpenConns: env.GetInt("DB_MAX_OPEN_CONNS", 30),
