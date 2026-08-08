@@ -90,3 +90,47 @@ make migrate-down
 **JSON Marshalling Responses**
 
 [JSON Marshalling Responses](https://github.com/Prakash-Ravichandran/go-social-feed-api/commit/1e3c41c605a6b4a7e4a36ebc20caacb8faec37ae)
+
+#### Create a post by having 1 user created in database
+
+- [create a post](https://github.com/Prakash-Ravichandran/go-social-feed-api/commit/cbfc71b003fefc9007eb44e527e9ad742438a9a6)
+
+create a user, where id, created and updated are automatically created.
+
+```SQL
+INSERT INTO
+  users (email, username, password)
+VALUES
+  ('mail@email.com', 'Tom', 'pwpw')
+```
+
+<img width="1667" height="622" alt="Image" src="https://github.com/user-attachments/assets/33ce9df5-ea71-4d16-a78d-89b0bff4dd17" />
+
+create post in which tags column are created using alter table syntax.
+
+- create post using below POST parameters
+
+```JSON
+{
+
+  "title": "First post",
+  "content": "This is my first post - I would like to aunnce that i have ,.....",
+  "tags": ["tag1"]
+}
+```
+
+Response:
+
+```JSON
+{
+    "id": 3,
+    "content": "2026-08-08T07:39:19Z",
+    "title": "First post",
+    "user_id": "1",
+    "tags": [
+        "tag1"
+    ],
+    "created_at": "2026-08-08T07:39:19Z",
+    "updated_at": "2026-08-08T07:39:19Z"
+}
+```
