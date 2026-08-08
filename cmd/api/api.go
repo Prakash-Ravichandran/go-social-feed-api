@@ -33,6 +33,7 @@ func (app *application) mount() http.Handler {
 	// handlers
 	r.Get("/health", app.handleHealth)
 	r.Get("/posts", app.postsHandler)
+	r.Post("/posts", app.createPostHandler)
 
 	return r
 }
