@@ -113,24 +113,24 @@ create post in which tags column are created using alter table syntax.
 ```JSON
 {
 
-  "title": "First post",
-  "content": "This is my first post - I would like to aunnce that i have ,.....",
-  "tags": ["tag1"]
+  "title": "Best Movies in Hollywood",
+  "content": "Mission Impossible, Fast and Furious",
+  "tags": ["Hollywood"]
 }
 ```
 
 Response:
 
 ```JSON
-{
-    "id": 3,
-    "content": "2026-08-08T07:39:19Z",
-    "title": "First post",
-    "user_id": "1",
-    "tags": [
-        "tag1"
-    ],
-    "created_at": "2026-08-08T07:39:19Z",
-    "updated_at": "2026-08-08T07:39:19Z"
-}
+[
+  {
+    "id": 4,
+    "title": "Best Movies in Hollywood",
+    "user_id": 1,
+    "content": "Mission Impossible, Fast and Furious",
+    "tags": "{Hollywood}",
+    "created_at": "2026-08-08 13:31:08+00",
+    "updated_at": "2026-08-08 13:31:08+00"
+  }
+]
 ```
