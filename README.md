@@ -134,3 +134,25 @@ Response:
   }
 ]
 ```
+
+### GET: Implement POST GetById
+
+[Implement POST GetById](https://github.com/Prakash-Ravichandran/go-social-feed-api/commit/2a5c8962a0687a731443cbfa627cba31d861b65e#diff-96ee07431493095d4c7e7ed42090aad5945b7ef6ee635ce6453890f0108337cb)
+
+Test it: http://127.0.0.1:3000/posts/4
+
+Response
+
+```JSON
+{
+    "id": 4,
+    "content": "Mission Impossible, Fast and Furious",
+    "title": "Best Movies in Hollywood",
+    "user_id": "1",
+    "tags": [
+        "Hollywood"
+    ],
+    "created_at": "2026-08-08T13:31:08Z",
+    "updated_at": "2026-08-08T13:31:08Z"
+}
+```
