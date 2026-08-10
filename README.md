@@ -156,3 +156,37 @@ Response
     "updated_at": "2026-08-08T13:31:08Z"
 }
 ```
+
+### PUT: Implement PUT: updatePostById
+
+[Implement PUT updatePostById](https://github.com/Prakash-Ravichandran/go-social-feed-api/commit/4f9c8bb9636ac5302df7936958d7f7a807256f3d)
+
+Test it:PUT: http://127.0.0.1:3000/posts/2
+
+Input
+
+```JSON
+{
+
+  "title": "Best Songs of 2000",
+  "content": "Best songs of 2000 in Tamil, Telugu, Hindi",
+  "tags": ["Kollywod"]
+}
+
+```
+
+Response
+
+```JSON
+{
+    "id": 2,
+    "content": "Best songs of 2000 in Tamil, Telugu, Hindi",
+    "title": "Best Songs of 2000",
+    "user_id": "1",
+    "tags": [
+        "Kollywod"
+    ],
+    "created_at": "2026-08-08T07:38:58Z",
+    "updated_at": "2026-08-08T07:38:58Z"
+}
+```
