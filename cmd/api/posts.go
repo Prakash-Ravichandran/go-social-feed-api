@@ -15,7 +15,13 @@ type CreatePostPayload struct {
 	Tags    []string `json:"tags"`
 }
 
-func (app *application) postsHandler(w http.ResponseWriter, r *http.Request) {
+type UpdatePostPayload struct {
+	Content string   `json:"content"`
+	Title   string   `json:"title"`
+	Tags    []string `json:"tags"`
+}
+
+func (app *application) postsHealthCheckHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]string{
 		"status":  "Posts - All Good",
 		"env":     app.config.env,
@@ -77,4 +83,38 @@ func (app *application) getPostsById(w http.ResponseWriter, r *http.Request) {
 	}
 
 	WriteJSON(w, http.StatusOK, posts)
+}
+
+func (app *application) updatePostsById(w http.ResponseWriter, r *http.Request) {
+	postId := chi.URLParam(r, "id")
+
+	postInt64, err := strconv.ParseInt(postId, 10, 64)
+	if err != nil {
+		fmt.Println("Error during conversion:", err)
+		return
+	}
+
+	ctx := r.Context()
+
+	var tempUpdatePost UpdatePostPayload
+
+	// capture JSON from user and store to appropriate typed data structure
+	if err := ReadJSON(w, http.StatusOK, r, &tempUpdatePost); err != nil {
+		WriteErrorJSON(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	tempPost := &store.Post{
+		Title:   tempUpdatePost.Title,
+		Content: tempUpdatePost.Content,
+		Tags:    tempUpdatePost.Tags,
+	}
+
+	post, err := app.store.Posts.UpdateById(ctx, postInt64, tempPost)
+	if err != nil {
+		WriteErrorJSON(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	WriteJSON(w, http.StatusOK, post)
 }
