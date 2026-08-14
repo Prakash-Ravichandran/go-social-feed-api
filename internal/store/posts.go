@@ -3,6 +3,7 @@ package store
 import (
 	"context"
 	"database/sql"
+	"errors"
 
 	"github.com/lib/pq"
 )
@@ -21,6 +22,8 @@ type Post struct {
 type PostStore struct {
 	db *sql.DB
 }
+
+var ErrNotFound = errors.New("resource not found")
 
 func (ps *PostStore) Create(ctx context.Context, post *Post) error {
 	query := `
@@ -46,7 +49,12 @@ func (ps *PostStore) GetById(ctx context.Context, id int64) (*Post, error) {
 	err := ps.db.QueryRowContext(ctx, query, id).Scan(&post.ID, &post.Title, &post.UserID, &post.Content, &post.CreatedAt, pq.Array(&post.Tags), &post.UpdatedAt)
 
 	if err != nil {
-		return nil, err
+		switch {
+		case errors.Is(err, sql.ErrNoRows):
+			return nil, ErrNotFound
+		default:
+			return nil, err
+		}
 	}
 
 	return &Post{
@@ -85,4 +93,28 @@ func (ps *PostStore) UpdateById(ctx context.Context, id int64, tempPost *Post) (
 		CreatedAt: updatedPost.CreatedAt,
 		UpdatedAt: updatedPost.UpdatedAt,
 	}, nil
+}
+
+func (ps *PostStore) DeleteById(ctx context.Context, id int64) error {
+	query := `
+	    DELETE FROM posts WHERE id = $1
+	`
+
+	result, err := ps.db.ExecContext(ctx, query, id)
+
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	// If no rows were affected, the post ID didn't exist in the DB
+	if rowsAffected == 0 {
+		return ErrNotFound
+	}
+
+	return nil
 }

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -29,7 +30,7 @@ func (app *application) postsHealthCheckHandler(w http.ResponseWriter, r *http.R
 	}
 
 	if err := WriteJSON(w, http.StatusOK, data); err != nil {
-		WriteErrorJSON(w, http.StatusInternalServerError, "err.Error()")
+		app.internalServerError(w, r, err)
 	}
 }
 
@@ -38,7 +39,7 @@ func (app *application) createPostHandler(w http.ResponseWriter, r *http.Request
 
 	// capture user payload info into postpayload
 	if err := ReadJSON(w, http.StatusOK, r, &postPayload); err != nil {
-		WriteErrorJSON(w, http.StatusBadRequest, err.Error())
+		app.badRequestResponse(w, r, err)
 		return
 	}
 
@@ -53,12 +54,12 @@ func (app *application) createPostHandler(w http.ResponseWriter, r *http.Request
 	}
 
 	if err := app.store.Posts.Create(ctx, posts); err != nil {
-		WriteErrorJSON(w, http.StatusInternalServerError, err.Error())
+		app.internalServerError(w, r, err)
 		return
 	}
 
 	if err := WriteJSON(w, http.StatusCreated, posts); err != nil {
-		WriteErrorJSON(w, http.StatusInternalServerError, err.Error())
+		app.internalServerError(w, r, err)
 		return
 	}
 }
@@ -68,7 +69,7 @@ func (app *application) getPostsById(w http.ResponseWriter, r *http.Request) {
 
 	postInt64, err := strconv.ParseInt(postId, 10, 64)
 	if err != nil {
-		fmt.Println("Error during conversion:", err)
+		app.internalServerError(w, r, err)
 		return
 	}
 
@@ -78,7 +79,7 @@ func (app *application) getPostsById(w http.ResponseWriter, r *http.Request) {
 	posts, err := app.store.Posts.GetById(ctx, postInt64)
 
 	if err != nil {
-		WriteErrorJSON(w, http.StatusInternalServerError, err.Error())
+		app.internalServerError(w, r, err)
 		return
 	}
 
@@ -117,4 +118,29 @@ func (app *application) updatePostsById(w http.ResponseWriter, r *http.Request) 
 	}
 
 	WriteJSON(w, http.StatusOK, post)
+}
+
+func (app *application) deletePostsById(w http.ResponseWriter, r *http.Request) {
+	postId := chi.URLParam(r, "id")
+
+	postInt64, err := strconv.ParseInt(postId, 10, 64)
+	if err != nil {
+		WriteErrorJSON(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	ctx := r.Context()
+	if err := app.store.Posts.DeleteById(ctx, postInt64); err != nil {
+		switch {
+		case errors.Is(err, store.ErrNotFound):
+			WriteErrorJSON(w, http.StatusNotFound, "post not found")
+		default:
+			WriteErrorJSON(w, http.StatusInternalServerError, err.Error())
+		}
+		return
+	}
+
+	// https://stackoverflow.com/questions/2342579/http-status-code-for-update-and-delete
+	// a 204 response - 204 (No Content) if the action has been enacted but the response does not include an entity.
+	w.WriteHeader(http.StatusNoContent)
 }
