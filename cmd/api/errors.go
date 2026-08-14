@@ -11,7 +11,12 @@ func (app *application) internalServerError(w http.ResponseWriter, r *http.Reque
 	WriteErrorJSON(w, http.StatusInternalServerError, "the server encountered a problem")
 }
 
-func (app *application) badRequestError(w http.ResponseWriter, r *http.Request, err error) {
+func (app *application) badRequestResponse(w http.ResponseWriter, r *http.Request, err error) {
 	log.Println("bad request", "method", r.Method, "path", r.URL.Path, "error", err.Error())
 	WriteErrorJSON(w, http.StatusBadRequest, err.Error())
+}
+
+func (app *application) notFoundResponse(w http.ResponseWriter, r *http.Request, err error) {
+	log.Println("not found", "method", r.Method, "path", r.URL.Path, "error", err.Error())
+	WriteErrorJSON(w, http.StatusNotFound, err.Error())
 }

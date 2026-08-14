@@ -74,13 +74,18 @@ func (app *application) getPostsById(w http.ResponseWriter, r *http.Request) {
 	}
 
 	ctx := r.Context()
-
 	// app.store.Posts.GetById -> PostStore implements the interface GetById
 	posts, err := app.store.Posts.GetById(ctx, postInt64)
 
 	if err != nil {
-		app.internalServerError(w, r, err)
-		return
+		switch {
+		case errors.Is(err, store.ErrNotFound):
+			app.notFoundResponse(w, r, err)
+			return
+		default:
+			app.internalServerError(w, r, err)
+			return
+		}
 	}
 
 	WriteJSON(w, http.StatusOK, posts)
