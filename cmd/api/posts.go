@@ -8,11 +8,12 @@ import (
 
 	"github.com/Prakash-Ravichandran/go-social-feed-api/internal/store"
 	"github.com/go-chi/chi/v5"
+	"github.com/go-playground/validator/v10"
 )
 
 type CreatePostPayload struct {
-	Tilte   string   `json:"title"`
-	Content string   `json:"content"`
+	Tilte   string   `json:"title" validate:"required,max=100"`
+	Content string   `json:"content" validate:"required,max=1000"`
 	Tags    []string `json:"tags"`
 }
 
@@ -41,6 +42,12 @@ func (app *application) createPostHandler(w http.ResponseWriter, r *http.Request
 	if err := ReadJSON(w, http.StatusOK, r, &postPayload); err != nil {
 		app.badRequestResponse(w, r, err)
 		return
+	}
+
+	// validate the field - required and max characters for title & content
+	if err := Validate.Struct(postPayload); err != nil {
+		ValidationErrors := err.(validator.ValidationErrors)
+		http.Error(w, fmt.Sprintf("validation error: %s", ValidationErrors), http.StatusBadRequest)
 	}
 
 	ctx := r.Context()
