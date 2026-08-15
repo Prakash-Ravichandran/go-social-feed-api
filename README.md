@@ -190,3 +190,7 @@ Response
     "updated_at": "2026-08-08T07:38:58Z"
 }
 ```
+
+### HTTP Payload Validation
+
+[HTTP Payload Validation](https://github.com/Prakash-Ravichandran/go-social-feed-api/commit/d98584f5ce74e07a152ece4bd2422fd1e246d5aa)
