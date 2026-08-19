@@ -12,14 +12,14 @@ import (
 )
 
 type CreatePostPayload struct {
-	Tilte   string   `json:"title" validate:"required,max=100"`
+	Title   string   `json:"title" validate:"required,max=100"`
 	Content string   `json:"content" validate:"required,max=1000"`
 	Tags    []string `json:"tags"`
 }
 
 type UpdatePostPayload struct {
-	Content string   `json:"content"`
-	Title   string   `json:"title"`
+	Title   string   `json:"title" validate:"required,max=100"`
+	Content string   `json:"content" validate:"required,max=1000"`
 	Tags    []string `json:"tags"`
 }
 
@@ -48,12 +48,13 @@ func (app *application) createPostHandler(w http.ResponseWriter, r *http.Request
 	if err := Validate.Struct(postPayload); err != nil {
 		ValidationErrors := err.(validator.ValidationErrors)
 		http.Error(w, fmt.Sprintf("validation error: %s", ValidationErrors), http.StatusBadRequest)
+		return
 	}
 
 	ctx := r.Context()
 
 	posts := &store.Post{
-		Title:   postPayload.Tilte,
+		Title:   postPayload.Title,
 		Content: postPayload.Content,
 		Tags:    postPayload.Tags,
 		// TODO: change after auth
@@ -113,7 +114,14 @@ func (app *application) updatePostsById(w http.ResponseWriter, r *http.Request) 
 
 	// capture JSON from user and store to appropriate typed data structure
 	if err := ReadJSON(w, http.StatusOK, r, &tempUpdatePost); err != nil {
-		WriteErrorJSON(w, http.StatusBadRequest, err.Error())
+		app.badRequestResponse(w, r, err)
+		return
+	}
+
+	// validate the field - required and max characters for title & content
+	if err := Validate.Struct(tempUpdatePost); err != nil {
+		ValidationErrors := err.(validator.ValidationErrors)
+		http.Error(w, fmt.Sprintf("validation error: %s", ValidationErrors), http.StatusBadRequest)
 		return
 	}
 
