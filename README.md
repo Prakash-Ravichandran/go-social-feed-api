@@ -194,3 +194,28 @@ Response
 ### HTTP Payload Validation
 
 [HTTP Payload Validation](https://github.com/Prakash-Ravichandran/go-social-feed-api/commit/d98584f5ce74e07a152ece4bd2422fd1e246d5aa)
+
+### Attach Comments[] to Post
+
+[attaching comments to post](https://github.com/Prakash-Ravichandran/go-social-feed-api/commit/f449e1eacf4a935a4c1072f9af38590d2eea855d)
+
+Query 1: Query 1 is preferred over 2
+
+```sql
+SELECT * FROM COMMENTS c
+JOIN users ON users.id = c.user_id WHERE c.post_id = 2;
+```
+
+Individual columns for query 1
+
+```sql
+SELECT c.id, c.post_id, c.user_id, c.content, c.created_at,  users.id, users.username FROM COMMENTS c
+JOIN users ON users.id = c.user_id WHERE c.post_id = 2 ORDER BY c.created_at DESC;
+```
+
+Query 2:
+
+```sql
+SELECT * FROM posts
+JOIN comments ON comments.post_id = posts.id;
+```
