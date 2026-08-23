@@ -96,6 +96,14 @@ func (app *application) getPostsById(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	comments, err := app.store.Comments.GetPostById(ctx, postInt64)
+	if err != nil {
+		app.internalServerError(w, r, err)
+		return
+	}
+
+	posts.Comments = comments
+
 	WriteJSON(w, http.StatusOK, posts)
 }
 
