@@ -153,7 +153,7 @@ func (app *application) deletePostsById(w http.ResponseWriter, r *http.Request) 
 
 	postInt64, err := strconv.ParseInt(postId, 10, 64)
 	if err != nil {
-		WriteErrorJSON(w, http.StatusBadRequest, err.Error())
+		app.badRequestResponse(w, r, err)
 		return
 	}
 
@@ -161,9 +161,9 @@ func (app *application) deletePostsById(w http.ResponseWriter, r *http.Request) 
 	if err := app.store.Posts.DeleteById(ctx, postInt64); err != nil {
 		switch {
 		case errors.Is(err, store.ErrNotFound):
-			WriteErrorJSON(w, http.StatusNotFound, "post not found")
+			app.notFoundResponse(w, r, err)
 		default:
-			WriteErrorJSON(w, http.StatusInternalServerError, err.Error())
+			app.internalServerError(w, r, err)
 		}
 		return
 	}
