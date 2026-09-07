@@ -36,9 +36,12 @@ func (app *application) mount() http.Handler {
 	r.Route("/posts", func(r chi.Router) {
 		r.Get("/", app.postsHealthCheckHandler)
 		r.Post("/", app.createPostHandler)
+
 		r.Route("/{id}", func(r chi.Router) {
+			r.Use(app.postsContextMiddleware) // middleware accessible to /posts/:id
 			r.Get("/", app.getPostsById)
-			r.Put("/", app.updatePostsById)
+			//https://stackoverflow.com/questions/28459418/use-of-put-vs-patch-methods-in-rest-api-real-life-scenarios
+			r.Patch("/", app.updatePostsById)
 			r.Delete("/", app.deletePostsById)
 		})
 	})

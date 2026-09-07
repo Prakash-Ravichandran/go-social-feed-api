@@ -219,3 +219,39 @@ Query 2:
 SELECT * FROM posts
 JOIN comments ON comments.post_id = posts.id;
 ```
+
+### Updating Title, content individually
+
+- because updating one field is a valid thing
+- default value of string variable is a empty "" string and a empty string is valid value in updating a post
+
+The HTTP validation here cannot have both the fields to be required while updating the post. Hence it was removed.
+
+- user only updates the title, check for `tempUpdatePost.Title != nil` is not nil and update to post.
+- user only updates the content, check for `tempUpdatePost.Content != nil` is not nil and update to post.
+
+**By adding if tempUpdatePost.Content != nil:**
+
+- Go checks: "Did the user send a new content field?"
+
+- It sees `tempUpdatePost.Content` is nil (No).
+
+- It skips the update and keeps the old content untouched.
+
+<img width="1160" height="801" alt="Image" src="https://github.com/user-attachments/assets/df46eaae-d352-4d2d-a95f-972874e46ac1" />
+
+### Request Validation: `required` vs `omitempty`
+
+| Feature           | `required`               | `omitempty`                        |
+| :---------------- | :----------------------- | :--------------------------------- |
+| **Primary Use**   | `POST` (Create)          | `PATCH` (Partial Update)           |
+| **Missing Field** | ❌ **Fails** (Mandatory) | ✅ **Passes** (Validation skipped) |
+| **Present Field** | Enforces rules           | Enforces rules                     |
+| **Go Field Type** | Value types (`string`)   | Pointer types (`*string`)          |
+
+#### Quick Rules
+
+- **`required`**: The JSON field **must** be present in the request. Use for creating resources where data is mandatory.
+- **`omitempty`**: The JSON field is **optional**. If omitted (`nil`), validation is skipped. If provided, constraints (e.g., `max=100`) are enforced.
+
+> **Rule of Thumb:** Use `required` for `POST` payloads and `omitempty` with pointer types (`*string`) for `PATCH` partial updates.

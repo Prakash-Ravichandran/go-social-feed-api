@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"net/http"
@@ -18,10 +19,14 @@ type CreatePostPayload struct {
 }
 
 type UpdatePostPayload struct {
-	Title   string   `json:"title" validate:"required,max=100"`
-	Content string   `json:"content" validate:"required,max=1000"`
-	Tags    []string `json:"tags"`
+	Title   *string   `json:"title" validate:"omitempty,max=100"`
+	Content *string   `json:"content" validate:"omitempty,max=1000"`
+	Tags    *[]string `json:"tags" validate:"omitempty,max=5,dive,max=20"`
 }
+
+type postKey string
+
+const postCtx postKey = "post"
 
 func (app *application) postsHealthCheckHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]string{
@@ -73,50 +78,21 @@ func (app *application) createPostHandler(w http.ResponseWriter, r *http.Request
 }
 
 func (app *application) getPostsById(w http.ResponseWriter, r *http.Request) {
-	postId := chi.URLParam(r, "id")
+	post := getPostFromCtx(r)
 
-	postInt64, err := strconv.ParseInt(postId, 10, 64)
+	comments, err := app.store.Comments.GetPostById(r.Context(), post.ID)
 	if err != nil {
 		app.internalServerError(w, r, err)
 		return
 	}
 
-	ctx := r.Context()
-	// app.store.Posts.GetById -> PostStore implements the interface GetById
-	posts, err := app.store.Posts.GetById(ctx, postInt64)
+	post.Comments = comments
 
-	if err != nil {
-		switch {
-		case errors.Is(err, store.ErrNotFound):
-			app.notFoundResponse(w, r, err)
-			return
-		default:
-			app.internalServerError(w, r, err)
-			return
-		}
-	}
-
-	comments, err := app.store.Comments.GetPostById(ctx, postInt64)
-	if err != nil {
-		app.internalServerError(w, r, err)
-		return
-	}
-
-	posts.Comments = comments
-
-	WriteJSON(w, http.StatusOK, posts)
+	WriteJSON(w, http.StatusOK, post)
 }
 
 func (app *application) updatePostsById(w http.ResponseWriter, r *http.Request) {
-	postId := chi.URLParam(r, "id")
-
-	postInt64, err := strconv.ParseInt(postId, 10, 64)
-	if err != nil {
-		fmt.Println("Error during conversion:", err)
-		return
-	}
-
-	ctx := r.Context()
+	post := getPostFromCtx(r)
 
 	var tempUpdatePost UpdatePostPayload
 
@@ -133,15 +109,26 @@ func (app *application) updatePostsById(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	tempPost := &store.Post{
-		Title:   tempUpdatePost.Title,
-		Content: tempUpdatePost.Content,
-		Tags:    tempUpdatePost.Tags,
+	// if the user includes Content in the update json, then update it
+	if tempUpdatePost.Content != nil {
+		post.Content = *tempUpdatePost.Content
 	}
 
-	post, err := app.store.Posts.UpdateById(ctx, postInt64, tempPost)
+	// if the user includes Title in the update json, then update it
+	if tempUpdatePost.Title != nil {
+		post.Title = *tempUpdatePost.Title
+	}
+
+	// if the user includes Tags in the update json, then update it
+	if tempUpdatePost.Tags != nil {
+		post.Tags = *tempUpdatePost.Tags
+	}
+
+	ctx := r.Context()
+
+	post, err := app.store.Posts.UpdateById(ctx, post)
 	if err != nil {
-		WriteErrorJSON(w, http.StatusInternalServerError, err.Error())
+		app.internalServerError(w, r, err)
 		return
 	}
 
@@ -171,4 +158,39 @@ func (app *application) deletePostsById(w http.ResponseWriter, r *http.Request) 
 	// https://stackoverflow.com/questions/2342579/http-status-code-for-update-and-delete
 	// a 204 response - 204 (No Content) if the action has been enacted but the response does not include an entity.
 	w.WriteHeader(http.StatusNoContent)
+}
+
+func (app *application) postsContextMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// an implementation of getPostById
+		postId := chi.URLParam(r, "id")
+		postInt64, err := strconv.ParseInt(postId, 10, 64)
+		if err != nil {
+			app.internalServerError(w, r, err)
+			return
+		}
+
+		ctx := r.Context()
+		// app.store.Posts.GetById -> PostStore implements the interface GetById
+		post, err := app.store.Posts.GetById(ctx, postInt64)
+
+		if err != nil {
+			switch {
+			case errors.Is(err, store.ErrNotFound):
+				app.notFoundResponse(w, r, err)
+				return
+			default:
+				app.internalServerError(w, r, err)
+				return
+			}
+		}
+
+		ctx = context.WithValue(ctx, postCtx, post)
+		next.ServeHTTP(w, r.WithContext(ctx))
+	})
+}
+
+func getPostFromCtx(r *http.Request) *store.Post {
+	post, _ := r.Context().Value(postCtx).(*store.Post)
+	return post
 }

@@ -70,7 +70,7 @@ func (ps *PostStore) GetById(ctx context.Context, id int64) (*Post, error) {
 }
 
 // app.store.Posts.UpdateById
-func (ps *PostStore) UpdateById(ctx context.Context, id int64, tempPost *Post) (*Post, error) {
+func (ps *PostStore) UpdateById(ctx context.Context, tempPost *Post) (*Post, error) {
 	query := `
 	  UPDATE posts
 	  SET content = $1, title = $2, tags = $3
@@ -79,7 +79,7 @@ func (ps *PostStore) UpdateById(ctx context.Context, id int64, tempPost *Post) (
 	`
 	var updatedPost Post
 	// the arguments of QueryRowContext and Scan should be in correspondance to the query written
-	err := ps.db.QueryRowContext(ctx, query, tempPost.Content, tempPost.Title, pq.Array(tempPost.Tags), id).Scan(&updatedPost.ID, &updatedPost.Content, &updatedPost.Title, &updatedPost.UserID, pq.Array(&updatedPost.Tags), &updatedPost.CreatedAt, &updatedPost.UpdatedAt)
+	err := ps.db.QueryRowContext(ctx, query, tempPost.Content, tempPost.Title, pq.Array(tempPost.Tags), tempPost.ID).Scan(&updatedPost.ID, &updatedPost.Content, &updatedPost.Title, &updatedPost.UserID, pq.Array(&updatedPost.Tags), &updatedPost.CreatedAt, &updatedPost.UpdatedAt)
 
 	if err != nil {
 		return nil, err
