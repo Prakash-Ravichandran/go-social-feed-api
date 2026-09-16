@@ -35,7 +35,7 @@ func (app *application) postsHealthCheckHandler(w http.ResponseWriter, r *http.R
 		"version": version,
 	}
 
-	if err := WriteJSON(w, http.StatusOK, data); err != nil {
+	if err := app.jsonResponse(w, http.StatusOK, data); err != nil {
 		app.internalServerError(w, r, err)
 	}
 }
@@ -71,7 +71,7 @@ func (app *application) createPostHandler(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	if err := WriteJSON(w, http.StatusCreated, posts); err != nil {
+	if err := app.jsonResponse(w, http.StatusCreated, posts); err != nil {
 		app.internalServerError(w, r, err)
 		return
 	}
@@ -88,7 +88,7 @@ func (app *application) getPostsById(w http.ResponseWriter, r *http.Request) {
 
 	post.Comments = comments
 
-	WriteJSON(w, http.StatusOK, post)
+	app.jsonResponse(w, http.StatusOK, post)
 }
 
 func (app *application) updatePostsById(w http.ResponseWriter, r *http.Request) {
@@ -132,7 +132,7 @@ func (app *application) updatePostsById(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	WriteJSON(w, http.StatusOK, post)
+	app.jsonResponse(w, http.StatusOK, post)
 }
 
 func (app *application) deletePostsById(w http.ResponseWriter, r *http.Request) {

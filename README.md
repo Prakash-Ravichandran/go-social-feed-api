@@ -255,3 +255,7 @@ The HTTP validation here cannot have both the fields to be required while updati
 - **`omitempty`**: The JSON field is **optional**. If omitted (`nil`), validation is skipped. If provided, constraints (e.g., `max=100`) are enforced.
 
 > **Rule of Thumb:** Use `required` for `POST` payloads and `omitempty` with pointer types (`*string`) for `PATCH` partial updates.
+
+### Standardising JSON Responses:
+
+- Envelope responses with data: {} envelope.
