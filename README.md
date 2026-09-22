@@ -260,3 +260,23 @@ The HTTP validation here cannot have both the fields to be required while updati
 
 - Envelope responses with data: {} envelope.
 - [Commit](https://github.com/Prakash-Ravichandran/go-social-feed-api/commit/4224ec03b5e4df86f57d5bf0a9365af38a55c80f)
+
+### Optimistic concurrency control
+
+#### Non-ConcurrentUpdates:
+
+<img width="1667" height="342" alt="Image" src="https://github.com/user-attachments/assets/390ef12d-fdb1-4925-ad50-5c148de2def7" />
+
+#### Column: version
+
+<img width="1677" height="516" alt="Image" src="https://github.com/user-attachments/assets/00a3cceb-64ac-4f37-89c8-eaa39d479f71" />
+
+#### Test for optimistic concurrency control:
+
+<img width="1155" height="167" alt="Image" src="https://github.com/user-attachments/assets/0ed77521-13a2-470d-b553-c4ea0a10f6c3" />
+
+#### Reference:
+
+1. Medium Theory Part: Read “Concurrency & Concurrency Control in DBMS“ by Approved Writers on Medium: https://medium.com/approved-tech/concurrency-concurrency-control-74bb04d0e9fd
+
+2. Medium Code Part: https://medium.com/@felipe.ascari_49171/concurrent-transactions-in-go-pessimistic-vs-optimistic-locks-part-1-2-33f866561feb
