@@ -17,6 +17,7 @@ type Post struct {
 	Tags      []string  `json:"tags"`
 	CreatedAt string    `json:"created_at"`
 	UpdatedAt string    `json:"updated_at"`
+	Version   int64     `json:"version"`
 	Comments  []Comment `json:"comments"`
 }
 
@@ -47,7 +48,7 @@ func (ps *PostStore) GetById(ctx context.Context, id int64) (*Post, error) {
     SELECT * FROM posts WHERE id = $1  
    `
 	var post Post
-	err := ps.db.QueryRowContext(ctx, query, id).Scan(&post.ID, &post.Title, &post.UserID, &post.Content, &post.CreatedAt, pq.Array(&post.Tags), &post.UpdatedAt)
+	err := ps.db.QueryRowContext(ctx, query, id).Scan(&post.ID, &post.Title, &post.UserID, &post.Content, &post.CreatedAt, pq.Array(&post.Tags), &post.UpdatedAt, &post.Version)
 
 	if err != nil {
 		switch {
@@ -66,6 +67,7 @@ func (ps *PostStore) GetById(ctx context.Context, id int64) (*Post, error) {
 		Tags:      post.Tags,
 		CreatedAt: post.CreatedAt,
 		UpdatedAt: post.UpdatedAt,
+		Version:   post.Version,
 	}, nil
 }
 
@@ -73,16 +75,38 @@ func (ps *PostStore) GetById(ctx context.Context, id int64) (*Post, error) {
 func (ps *PostStore) UpdateById(ctx context.Context, tempPost *Post) (*Post, error) {
 	query := `
 	  UPDATE posts
-	  SET content = $1, title = $2, tags = $3
-	  WHERE id = $4
-	  RETURNING id, content, title, user_id, tags, created_at, updated_at
+	  SET content = $1, title = $2, tags = $3, version = version + 1
+	  WHERE id = $4 AND version = $5
+	  RETURNING id, content, title, user_id, tags, created_at, updated_at, version
 	`
 	var updatedPost Post
 	// the arguments of QueryRowContext and Scan should be in correspondance to the query written
-	err := ps.db.QueryRowContext(ctx, query, tempPost.Content, tempPost.Title, pq.Array(tempPost.Tags), tempPost.ID).Scan(&updatedPost.ID, &updatedPost.Content, &updatedPost.Title, &updatedPost.UserID, pq.Array(&updatedPost.Tags), &updatedPost.CreatedAt, &updatedPost.UpdatedAt)
+	err := ps.db.QueryRowContext(
+		ctx,
+		query,
+		tempPost.Content,
+		tempPost.Title,
+		pq.Array(tempPost.Tags),
+		tempPost.ID,
+		tempPost.Version,
+	).Scan(
+		&updatedPost.ID,
+		&updatedPost.Content,
+		&updatedPost.Title,
+		&updatedPost.UserID,
+		pq.Array(&updatedPost.Tags),
+		&updatedPost.CreatedAt,
+		&updatedPost.UpdatedAt,
+		&updatedPost.Version,
+	)
 
 	if err != nil {
-		return nil, err
+		switch {
+		case errors.Is(err, sql.ErrNoRows):
+			return nil, ErrNotFound
+		default:
+			return nil, err
+		}
 	}
 
 	return &Post{
