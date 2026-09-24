@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"time"
 
 	"github.com/lib/pq"
 )
@@ -25,13 +26,19 @@ type PostStore struct {
 	db *sql.DB
 }
 
-var ErrNotFound = errors.New("resource not found")
+var (
+	ErrNotFound          = errors.New("resource not found")
+	QueryTimeoutDuration = time.Second * 5
+)
 
 func (ps *PostStore) Create(ctx context.Context, post *Post) error {
 	query := `
 	INSERT INTO posts (content, title, user_id, tags)
 	VALUES ($1, $2, $3, $4) RETURNING id, created_at, updated_at
 	`
+	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
+	defer cancel()
+
 	err := ps.db.QueryRowContext(ctx, query, post.Content, post.Title, post.UserID, pq.Array(post.Tags)).Scan(
 		&post.ID, &post.CreatedAt, &post.UpdatedAt,
 	)
@@ -48,6 +55,10 @@ func (ps *PostStore) GetById(ctx context.Context, id int64) (*Post, error) {
     SELECT * FROM posts WHERE id = $1  
    `
 	var post Post
+
+	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
+	defer cancel()
+
 	err := ps.db.QueryRowContext(ctx, query, id).Scan(&post.ID, &post.Title, &post.UserID, &post.Content, &post.CreatedAt, pq.Array(&post.Tags), &post.UpdatedAt, &post.Version)
 
 	if err != nil {
@@ -80,6 +91,9 @@ func (ps *PostStore) UpdateById(ctx context.Context, tempPost *Post) (*Post, err
 	  RETURNING id, content, title, user_id, tags, created_at, updated_at, version
 	`
 	var updatedPost Post
+
+	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
+	defer cancel()
 	// the arguments of QueryRowContext and Scan should be in correspondance to the query written
 	err := ps.db.QueryRowContext(
 		ctx,
@@ -124,6 +138,9 @@ func (ps *PostStore) DeleteById(ctx context.Context, id int64) error {
 	query := `
 	    DELETE FROM posts WHERE id = $1
 	`
+
+	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
+	defer cancel()
 
 	result, err := ps.db.ExecContext(ctx, query, id)
 

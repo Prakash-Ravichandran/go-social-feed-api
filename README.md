@@ -280,3 +280,12 @@ The HTTP validation here cannot have both the fields to be required while updati
 1. Medium Theory Part: Read “Concurrency & Concurrency Control in DBMS“ by Approved Writers on Medium: https://medium.com/approved-tech/concurrency-concurrency-control-74bb04d0e9fd
 
 2. Medium Code Part: https://medium.com/@felipe.ascari_49171/concurrent-transactions-in-go-pessimistic-vs-optimistic-locks-part-1-2-33f866561feb
+
+### Managing SQL Query Timeouts
+
+- Managing SQL query timeouts is the process of setting a strict time limit on database operations to prevent slow queries from hanging indefinitely, consuming connection pools, and degrading application performance.
+
+- Achieved using Go’s standard context package to define a deadline, and passing that context into Context-aware database methods (like QueryContext or ExecContext).
+
+[The Go Playground for long running context example](https://go.dev/play/p/Bhl4qprIBgH)
+[golang.cafe Content WithTimeout Example](https://golang.cafe/blog/golang-context-with-timeout-example)
