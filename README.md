@@ -294,4 +294,6 @@ The HTTP validation here cannot have both the fields to be required while updati
 
 #### Generate Posts
 
+[Database Seeding](https://github.com/Prakash-Ravichandran/go-social-feed-api/commit/239f62d819a8d9d6b686999d4b2c1d65ad73fc04)
+
 <img width="1836" height="906" alt="Image" src="https://github.com/user-attachments/assets/474c998b-36bd-421d-9c72-5aa334421a4b" />
