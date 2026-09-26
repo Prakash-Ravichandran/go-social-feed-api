@@ -289,3 +289,9 @@ The HTTP validation here cannot have both the fields to be required while updati
 
 [The Go Playground for long running context example](https://go.dev/play/p/Bhl4qprIBgH)
 [golang.cafe Content WithTimeout Example](https://golang.cafe/blog/golang-context-with-timeout-example)
+
+### Database Seeding
+
+#### Generate Posts
+
+<img width="1836" height="906" alt="Image" src="https://github.com/user-attachments/assets/474c998b-36bd-421d-9c72-5aa334421a4b" />

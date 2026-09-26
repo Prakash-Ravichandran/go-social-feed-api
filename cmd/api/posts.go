@@ -63,7 +63,7 @@ func (app *application) createPostHandler(w http.ResponseWriter, r *http.Request
 		Content: postPayload.Content,
 		Tags:    postPayload.Tags,
 		// TODO: change after auth
-		UserID: "1",
+		UserID: 1,
 	}
 
 	if err := app.store.Posts.Create(ctx, posts); err != nil {
