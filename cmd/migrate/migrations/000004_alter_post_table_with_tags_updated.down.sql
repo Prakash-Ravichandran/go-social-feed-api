@@ -1,7 +1,7 @@
 ALTER TABLE posts
    DROP 
-   COLUMN tags
+   COLUMN IF EXISTS tags
 
  ALTER TABLE posts
     DROP
-   COLUMN updated_at
+   COLUMN IF EXISTS updated_at
