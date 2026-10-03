@@ -301,3 +301,5 @@ The HTTP validation here cannot have both the fields to be required while updati
 ### UserProfile
 
 [getUserById](https://github.com/Prakash-Ravichandran/go-social-feed-api/commit/47bf1a669cd6612fbf32ea63082a7b8ff8123f63)
+
+Revisit Needed - [deleteUserById](https://github.com/Prakash-Ravichandran/go-social-feed-api/commit/225cd54b1bb5487b653cb77ea1838f4ed4e87387)
