@@ -303,3 +303,23 @@ The HTTP validation here cannot have both the fields to be required while updati
 [getUserById](https://github.com/Prakash-Ravichandran/go-social-feed-api/commit/47bf1a669cd6612fbf32ea63082a7b8ff8123f63)
 
 Revisit Needed - [deleteUserById](https://github.com/Prakash-Ravichandran/go-social-feed-api/commit/225cd54b1bb5487b653cb77ea1838f4ed4e87387)
+
+#### Add Followers
+
+- Composite Keys: A composite key is a unique identifier for each row in a table and is formed by combining two or more columns in a table
+
+[put vs post](https://blog.postman.com/put-vs-post/)
+
+**POST:**
+
+- The POST method is not idempotent, so if you send the same POST request twice, the server may create duplicate entries.
+
+**PUT:**
+
+- The HTTP PUT method updates or replaces an existing resource at a specific request URI. If the resource doesn’t exist, a PUT request can create it at that location.
+
+- The PUT method is idempotent, so it ensures the same state even if the same request is sent multiple times, making it a retry-safe operation. This reliability is especially valuable for APIs that need to handle retries gracefully in distributed systems.
+
+###### Database Relationships, SQL PRIMARY KEY, FOREIGN KEY, JOINS
+
+[Understand Relationships in PostgreSQL](https://medium.com/@code_and_chill/relationships-in-postgresql-128edec4742f)
