@@ -66,3 +66,30 @@ func (us *UserStore) GetById(ctx context.Context, userId int64) (*User, error) {
 	}, nil
 
 }
+
+func (us *UserStore) DeleteById(ctx context.Context, userId int64) error {
+	query := `
+	 DELETE FROM users
+	 WHERE id = $1
+	`
+
+	ctx, cancel := context.WithTimeout(ctx, QueryTimeoutDuration)
+	defer cancel()
+
+	result, err := us.db.ExecContext(ctx, query, userId)
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	// If no rows were affected, the post ID didn't exist in the DB
+	if rowsAffected == 0 {
+		return ErrNotFound
+	}
+
+	return nil
+}

@@ -51,6 +51,7 @@ func (app *application) mount() http.Handler {
 
 		r.Route("/{userId}", func(r chi.Router) {
 			r.Get("/", app.getUserHandler)
+			r.Delete("/", app.deleteUser)
 		})
 	})
 
