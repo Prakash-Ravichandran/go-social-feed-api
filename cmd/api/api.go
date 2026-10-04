@@ -50,7 +50,12 @@ func (app *application) mount() http.Handler {
 		r.Get("/health", app.usersHealthCheckHandler)
 
 		r.Route("/{userId}", func(r chi.Router) {
+			r.Use(app.userContextMiddleware)
 			r.Get("/", app.getUserHandler)
+			/* using PUT for users/{usersId}/follow because the action here is idempotent compared to POST.
+			also whenever we follow the user, it should return the same output. if we are already following the user it should thrown an error */
+			r.Put("/follow", app.followUserHandler)
+			r.Put("/unfollow", app.unfollowUserHandler)
 			r.Delete("/", app.deleteUser)
 		})
 	})

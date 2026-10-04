@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"time"
 
 	"github.com/lib/pq"
 )
@@ -25,11 +24,6 @@ type Post struct {
 type PostStore struct {
 	db *sql.DB
 }
-
-var (
-	ErrNotFound          = errors.New("resource not found")
-	QueryTimeoutDuration = time.Second * 5
-)
 
 func (ps *PostStore) Create(ctx context.Context, post *Post) error {
 	query := `

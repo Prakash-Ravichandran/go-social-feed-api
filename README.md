@@ -323,3 +323,50 @@ Revisit Needed - [deleteUserById](https://github.com/Prakash-Ravichandran/go-soc
 ###### Database Relationships, SQL PRIMARY KEY, FOREIGN KEY, JOINS
 
 [Understand Relationships in PostgreSQL](https://medium.com/@code_and_chill/relationships-in-postgresql-128edec4742f)
+
+```go
+
+// if different endpoint/actions (/follow, /unfollow, can use PUT alone on different endpoints. and its a preference
+r.Put("/follow", followHanlder)
+r.Put("/unfollow", unfollowHandler)
+
+
+// if same endpoint/actions (/follow), can use PUT and DELETE.
+r.Put("/follow", followHanlder)
+r.Delete("/follow", unfollowHandler)
+
+```
+
+**Middleware in Golang Development**: [golang-middleware]https://medium.com/@raihanur.rahman.2022/mastering-golang-middleware-from-basics-to-real-world-power-plays-347c14670e8c
+
+**Follow an user:**
+PUT : /users/105/follow
+
+<img width="1137" height="856" alt="Image" src="https://github.com/user-attachments/assets/87bd7cd8-1c28-47ff-b22e-e33b34dec1ca" />
+
+**request body:**
+
+```json
+{
+  "user_id": 199
+}
+```
+
+**Response:\***
+
+```json
+{
+  "data": {
+    "id": 105,
+    "username": "Carlos Rossi2",
+    "email": "Carlos Rossi2@example.com",
+    "created_at": "2026-10-03T14:43:32Z"
+  }
+}
+```
+
+Database update for a follow action:
+
+<img width="1861" height="942" alt="Image" src="https://github.com/user-attachments/assets/e3319b53-0ded-4eef-aac8-ddcf72a17c9d" />
+
+Database update for unfollow action:

@@ -20,3 +20,8 @@ func (app *application) notFoundResponse(w http.ResponseWriter, r *http.Request,
 	log.Println("not found", "method", r.Method, "path", r.URL.Path, "error", err.Error())
 	WriteErrorJSON(w, http.StatusNotFound, err.Error())
 }
+
+func (app *application) conflictResponse(w http.ResponseWriter, r *http.Request, err error) {
+	log.Println("conflict response", "method", r.Method, "path", r.URL.Path, "error", err.Error())
+	WriteErrorJSON(w, http.StatusConflict, err.Error())
+}
