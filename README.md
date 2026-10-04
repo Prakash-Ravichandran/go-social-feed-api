@@ -85,7 +85,7 @@ make migrate-down
 
 ```
 
-### 5. Posts CRUD
+### 7. Posts CRUD
 
 **JSON Marshalling Responses**
 
@@ -298,7 +298,9 @@ The HTTP validation here cannot have both the fields to be required while updati
 
 <img width="1836" height="906" alt="Image" src="https://github.com/user-attachments/assets/474c998b-36bd-421d-9c72-5aa334421a4b" />
 
-### UserProfile
+### 8. UserFeed
+
+#### Create UserProfile
 
 [getUserById](https://github.com/Prakash-Ravichandran/go-social-feed-api/commit/47bf1a669cd6612fbf32ea63082a7b8ff8123f63)
 
@@ -306,9 +308,44 @@ Revisit Needed - [deleteUserById](https://github.com/Prakash-Ravichandran/go-soc
 
 #### Add Followers
 
+[add Followers service follow/unfollow](https://github.com/Prakash-Ravichandran/go-social-feed-api/commit/6b22c41739e4bea9ac5ae98445c66b17ca740e36)
+
+**Follow an user:** PUT : /users/105/follow
+
+<img width="1137" height="856" alt="Image" src="https://github.com/user-attachments/assets/87bd7cd8-1c28-47ff-b22e-e33b34dec1ca" />
+
+**request body:**
+
+```json
+{
+  "user_id": 199
+}
+```
+
+**Response:\***
+
+```json
+{
+  "data": {
+    "id": 105,
+    "username": "Carlos Rossi2",
+    "email": "Carlos Rossi2@example.com",
+    "created_at": "2026-10-03T14:43:32Z"
+  }
+}
+```
+
+Database update for a follow action:
+
+<img width="1861" height="942" alt="Image" src="https://github.com/user-attachments/assets/e3319b53-0ded-4eef-aac8-ddcf72a17c9d" />
+
+Database update for unfollow action: unfollow removes the record from the table: followers
+
+<img width="1137" height="867" alt="Image" src="https://github.com/user-attachments/assets/befe6e4b-17ed-4cba-9bdc-379b4c72fb2e" />
+
 - Composite Keys: A composite key is a unique identifier for each row in a table and is formed by combining two or more columns in a table
 
-[put vs post](https://blog.postman.com/put-vs-post/)
+[put vs post decision for follow/unfollow action](https://blog.postman.com/put-vs-post/)
 
 **POST:**
 
@@ -338,35 +375,3 @@ r.Delete("/follow", unfollowHandler)
 ```
 
 **Middleware in Golang Development**: [golang-middleware]https://medium.com/@raihanur.rahman.2022/mastering-golang-middleware-from-basics-to-real-world-power-plays-347c14670e8c
-
-**Follow an user:**
-PUT : /users/105/follow
-
-<img width="1137" height="856" alt="Image" src="https://github.com/user-attachments/assets/87bd7cd8-1c28-47ff-b22e-e33b34dec1ca" />
-
-**request body:**
-
-```json
-{
-  "user_id": 199
-}
-```
-
-**Response:\***
-
-```json
-{
-  "data": {
-    "id": 105,
-    "username": "Carlos Rossi2",
-    "email": "Carlos Rossi2@example.com",
-    "created_at": "2026-10-03T14:43:32Z"
-  }
-}
-```
-
-Database update for a follow action:
-
-<img width="1861" height="942" alt="Image" src="https://github.com/user-attachments/assets/e3319b53-0ded-4eef-aac8-ddcf72a17c9d" />
-
-Database update for unfollow action:
