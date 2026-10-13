@@ -375,3 +375,9 @@ r.Delete("/follow", unfollowHandler)
 ```
 
 **Middleware in Golang Development**: [golang-middleware]https://medium.com/@raihanur.rahman.2022/mastering-golang-middleware-from-basics-to-real-world-power-plays-347c14670e8c
+
+### SQL Indexes
+
+[SQL INDEX INTRO](https://www.postgresql.org/docs/13/indexes-intro.html)
+[postgres pgtrm](https://www.postgresql.org/docs/9.5/pgtrgm.html)
+[Index Columns for LIKE in PostgreSQL](https://niallburkley.com/blog/index-columns-for-like-in-postgres/)
