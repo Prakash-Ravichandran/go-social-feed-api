@@ -381,3 +381,5 @@ r.Delete("/follow", unfollowHandler)
 [SQL INDEX INTRO](https://www.postgresql.org/docs/13/indexes-intro.html)
 [postgres pgtrm](https://www.postgresql.org/docs/9.5/pgtrgm.html)
 [Index Columns for LIKE in PostgreSQL](https://niallburkley.com/blog/index-columns-for-like-in-postgres/)
+
+[Medium - Indexing in Postgres](https://medium.com/geekculture/indexing-in-postgres-db-4cf502ce1b4e)
