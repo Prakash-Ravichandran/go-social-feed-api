@@ -383,3 +383,96 @@ r.Delete("/follow", unfollowHandler)
 [Index Columns for LIKE in PostgreSQL](https://niallburkley.com/blog/index-columns-for-like-in-postgres/)
 
 [Medium - Indexing in Postgres](https://medium.com/geekculture/indexing-in-postgres-db-4cf502ce1b4e)
+
+```sql
+EXPLAIN ANALYSE SELECT * FROM COMMENTS WHERE content ILIKE '%post%';
+
+
+do $$
+BEGIN
+
+for r in 1..100000 loop
+INSERT INTO COMMENTS (post_id, user_id, content) VALUES (749, 400, 'Super duper OMG... So cool COOL !');
+end loop;
+end;
+$$;
+
+```
+
+### UserFeed
+
+For a loggedin user john - get the userFeed from the users whom john is following.
+
+- Get the post.id, post.user_id, post.title, post.content from post
+- join the total no of comments to the feed from the comments table (left join/ left outer join).
+- show post of the users whom john is following from the followers table.
+- show posts of john as well.
+- group by all selected columns.
+- order by created_at column.
+
+```sql
+       	SELECT
+				p.id,
+        p.user_id,
+				p.title,
+				p.content,
+				p.created_at,
+				p.version,
+				p.tags,
+				u.username,
+				COUNT (c.id) AS comments_count
+		FROM posts p
+		LEFT JOIN comments c ON c.post_id = p.id
+		LEFT JOIN users u on p.user_id = u.id
+		JOIN followers f ON f.follower_id = p.user_id  OR p.user_id = $1
+		WHERE f.user_id = $1 OR p.user_id = $1
+		GROUP BY p.id, p.title, p.content, p.created_at, p.version, p.tags, u.username
+		ORDER BY p.created_at DESC;
+```
+
+Endpoint: http://127.0.0.1:3000/users/feed/
+
+Feed data:
+
+```json
+{
+  "data": [
+    {
+      "id": 381,
+      "content": "Our team just hit 95% test coverage on our core billing service. A small win, but a huge confidence boost for deployments.",
+      "title": "Understanding Rate Limiting and Circuit Breakers",
+      "user_id": 201,
+      "tags": ["Productivity", "Cooking"],
+      "created_at": "2026-10-03T14:43:33Z",
+      "updated_at": "",
+      "version": 0,
+      "comments": null,
+      "user": {
+        "id": 0,
+        "username": "Sarah Connor98",
+        "email": "",
+        "created_at": ""
+      },
+      "comments_count": 0
+    },
+    {
+      "id": 359,
+      "content": "What are your favorite VS Code / Neovim extensions for Golang development in 2026?",
+      "title": "Building Real-Time Applications with WebSockets",
+      "user_id": 199,
+      "tags": ["Cooking", "Mindfulness"],
+      "created_at": "2026-10-03T14:43:32Z",
+      "updated_at": "",
+      "version": 0,
+      "comments": null,
+      "user": {
+        "id": 0,
+        "username": "Qunn Fabray96",
+        "email": "",
+        "created_at": ""
+      },
+      "comments_count": 0
+    }
+  ]
+}
+```
