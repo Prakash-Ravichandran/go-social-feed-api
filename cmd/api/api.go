@@ -25,6 +25,7 @@ type config struct {
 func (app *application) mount() http.Handler {
 	r := chi.NewRouter()
 	// middlewares
+	r.Use(middleware.RedirectSlashes) // Redirects /users/feed/ to /users/feed automatically
 	r.Use(middleware.RequestID)
 	r.Use(middleware.ClientIPFromRemoteAddr) // pick one ClientIPFrom* based on your infra, see below
 	r.Use(middleware.Logger)
@@ -49,6 +50,11 @@ func (app *application) mount() http.Handler {
 	r.Route("/users", func(r chi.Router) {
 		r.Get("/health", app.usersHealthCheckHandler)
 
+		r.Group(func(r chi.Router) {
+			r.Get("/feed", app.getUserFeedHandler)
+			r.Get("/dummyfeed", app.dummyFeedHandler)
+		})
+
 		r.Route("/{userId}", func(r chi.Router) {
 			r.Use(app.userContextMiddleware)
 			r.Get("/", app.getUserHandler)
@@ -57,7 +63,9 @@ func (app *application) mount() http.Handler {
 			r.Put("/follow", app.followUserHandler)
 			r.Put("/unfollow", app.unfollowUserHandler)
 			r.Delete("/", app.deleteUser)
+
 		})
+
 	})
 
 	return r
