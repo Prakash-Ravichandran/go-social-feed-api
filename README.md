@@ -476,3 +476,13 @@ Feed data:
   ]
 }
 ```
+
+### Filtering, Sorting and Pagination
+
+**Pagination:**
+
+endpoint: http://127.0.0.1:3000/users/feed?limit=6&offset=0&sort=asc
+
+Before pagination, the ednpoint http://127.0.0.1:3000/users/feed returns all the feed posts for the logged-in user, with pagination now it was limited.
+
+here `limit`. `offset`, `sort` is parsed in the backend and it is queried by the `getUserFeedHandler`.
