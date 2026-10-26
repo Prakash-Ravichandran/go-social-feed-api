@@ -479,10 +479,19 @@ Feed data:
 
 ### Filtering, Sorting and Pagination
 
-**Pagination:**
+**Pagination & Sorting:**
 
 endpoint: http://127.0.0.1:3000/users/feed?limit=6&offset=0&sort=asc
 
 Before pagination, the ednpoint http://127.0.0.1:3000/users/feed returns all the feed posts for the logged-in user, with pagination now it was limited.
 
 here `limit`. `offset`, `sort` is parsed in the backend and it is queried by the `getUserFeedHandler`.
+
+**Filtering:**
+
+endpoint: http://127.0.0.1:3000/users/feed?tags=Health&search=new
+
+1. retrieve the posts with tags containing with science.
+2. get the filtered posts using the `search` URL param that matches `p.title` and `p.content`
+
+<img width="1290" height="911" alt="Image" src="https://github.com/user-attachments/assets/3b9b353b-46a5-4089-b459-4634a1b15153" />

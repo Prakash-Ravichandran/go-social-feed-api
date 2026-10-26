@@ -14,6 +14,8 @@ func (app *application) getUserFeedHandler(w http.ResponseWriter, r *http.Reques
 		Limit:  20, // default value 20
 		Offset: 0,
 		Sort:   "desc", // default desc sort
+		Tags:   []string{},
+		Search: "",
 	}
 
 	fq, err := fq.Parse(r)
