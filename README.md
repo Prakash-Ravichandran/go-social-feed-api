@@ -489,6 +489,8 @@ here `limit`. `offset`, `sort` is parsed in the backend and it is queried by the
 
 **Filtering:**
 
+[Filter using tags and search param](https://github.com/Prakash-Ravichandran/go-social-feed-api/commit/4bb4233b8b1dfe62304feadfe8f80d76bd3654f3)
+
 endpoint: http://127.0.0.1:3000/users/feed?tags=Health&search=new
 
 1. retrieve the posts with tags containing with science.
